@@ -12,11 +12,22 @@ import { DateField } from '@mui/x-date-pickers/DateField'; */
 
 
 const BookingPannel = () => { 
-  const [formLocation, setFormLocation] = useState('');
+  const [info, setInfo] = useState({
+    form_location: 1,
+    to_location: 0,
+    guest: 0,
+    date: '',
+    class_name: 0,
+  }); 
 
-  const handleChange = (event) => {
-    setFormLocation(event.target.value);
-  };
+  const handleChange = (e) => {
+    const {name,value} = e.target;
+    // console.log(name); 
+    setInfo((perv)=>({
+       ...perv,
+       [name]:value
+    }));
+  }; 
 
   return (
     <>
@@ -26,7 +37,7 @@ const BookingPannel = () => {
                   <Grid item xs={3}>
                     <FormControl fullWidth>
                         <InputLabel id="form-label">Form</InputLabel> 
-                        <Select className='form-width'  labelId="form-label" id="form-input" value={formLocation} label="Form" onChange={handleChange} defaultValue='1'>
+                        <Select className='form-width' name='form_location' labelId="form-label" id="form-input" value={info.form_location} label="Form" onChange={handleChange}  >
                           <MenuItem value={1}>Dhaka </MenuItem>
                           <MenuItem value={2}>Cox's Bazar</MenuItem>
                           <MenuItem value={3}>Jessore</MenuItem>
@@ -39,8 +50,8 @@ const BookingPannel = () => {
                   <Grid item xs={3}>
                     <FormControl fullWidth>
                           <InputLabel id="to-label">To</InputLabel> 
-                          <Select className='to-width'  labelId="to-label" id="to-input" value={formLocation} label="to" onChange={handleChange}>
-                            <MenuItem value={1}> Please Select </MenuItem>
+                          <Select className='to-width' name='to_location'  labelId="to-label" id="to-input" value={info.to_location} label="to" onChange={handleChange}>
+                            <MenuItem value={0}> Please Select </MenuItem>
                             <MenuItem value={1}>Dhaka</MenuItem>
                             <MenuItem value={2}>Cox's Bazar</MenuItem>
                             <MenuItem value={3}>Jessore</MenuItem>
@@ -58,7 +69,7 @@ const BookingPannel = () => {
                         <DateField label="Basic date field" />
                       </DemoContainer>
                     </LocalizationProvider> */}
-                    <TextField type='date'></TextField>
+                    <TextField type='date' name='date' ></TextField>
                   </Grid> 
 
 
@@ -68,9 +79,9 @@ const BookingPannel = () => {
                   <Grid item xs={2}>
                     <FormControl fullWidth>
                       <InputLabel id="guest-label">Guest</InputLabel> 
-                      <Select className='guest-width'  labelId="guest-label" id="guest-input" value={formLocation} label="guest" onChange={handleChange} >
-                        <MenuItem selected value={0}> Please Select </MenuItem>
-                        <MenuItem selected value={1}>1</MenuItem>
+                      <Select className='guest-width' name='guest' labelId="guest-label" id="guest-input" value={info.guest} label="guest" onChange={handleChange} >
+                        <MenuItem value={0}> Please Select </MenuItem>
+                        <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
                         <MenuItem value={3}>3</MenuItem>
                         <MenuItem value={4}>4</MenuItem>
@@ -82,9 +93,9 @@ const BookingPannel = () => {
                   <Grid item xs={2}>
                     <FormControl fullWidth>
                       <InputLabel id="class-label">Class Name</InputLabel> 
-                      <Select className='class-width'  labelId="class-label" id="class-input" value={formLocation} label="class" onChange={handleChange} >
-                        <MenuItem selected value={0}> Please Select </MenuItem>
-                        <MenuItem selected value={1}>Busieness Class</MenuItem>
+                      <Select className='class-width' name='class_name'  labelId="class-label" id="class-input" value={info.class_name} label="class" onChange={handleChange} >
+                        <MenuItem value={0}> Please Select </MenuItem>
+                        <MenuItem value={1}>Busieness Class</MenuItem>
                         <MenuItem value={2}>Economy Class</MenuItem> 
                       </Select>
                     </FormControl>
