@@ -5,21 +5,31 @@ import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl'; 
 import TextField from '@mui/material/TextField'; 
+import { Button } from '@mui/material';
 /* import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField'; */
 
-
+const today = ()=>{
+  const today = new Date();
+  const day = today.getDate().toString().padStart(2, '0');
+  const month = (today.getMonth() + 1).toString().padStart(2, '0');
+  const year = today.getFullYear();
+  const currentDate = `${year}-${month}-${day}`;
+  return currentDate;
+}
 const BookingPannel = () => { 
+  const date = today();
   const [info, setInfo] = useState({
     form_location: 1,
     to_location: 0,
     guest: 0,
-    date: '',
+    date: date,
     class_name: 0,
   }); 
-
+  
+console.log(today());
   const handleChange = (e) => {
     const {name,value} = e.target;
     // console.log(name); 
@@ -33,8 +43,9 @@ const BookingPannel = () => {
     <>
       <div className='booking-pannel'>
           <div className='card'>
+            <div>
                 <Grid container spacing={2}> 
-                  <Grid item xs={3}>
+                  <Grid item xs={2}>
                     <FormControl fullWidth>
                         <InputLabel id="form-label">Form</InputLabel> 
                         <Select className='form-width' name='form_location' labelId="form-label" id="form-input" value={info.form_location} label="Form" onChange={handleChange}  >
@@ -47,7 +58,7 @@ const BookingPannel = () => {
                         </Select>
                     </FormControl>
                   </Grid>   
-                  <Grid item xs={3}>
+                  <Grid item xs={2}>
                     <FormControl fullWidth>
                           <InputLabel id="to-label">To</InputLabel> 
                           <Select className='to-width' name='to_location'  labelId="to-label" id="to-input" value={info.to_location} label="to" onChange={handleChange}>
@@ -61,21 +72,14 @@ const BookingPannel = () => {
                           </Select>
                     </FormControl>
                   </Grid>  
-
-
                   <Grid item xs={2}>
                     {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={['DateField']}>
                         <DateField label="Basic date field" />
                       </DemoContainer>
                     </LocalizationProvider> */}
-                    <TextField type='date' name='date' ></TextField>
+                    <TextField type='date' name='date'  value={info.date} onChange={handleChange} ></TextField>
                   </Grid> 
-
-
-
-
-                  
                   <Grid item xs={2}>
                     <FormControl fullWidth>
                       <InputLabel id="guest-label">Guest</InputLabel> 
@@ -100,7 +104,11 @@ const BookingPannel = () => {
                       </Select>
                     </FormControl>
                   </Grid>  
+                  <Grid item xs={2} style={{alignItems:'center'}}>
+                   <Button  variant="outlined">Confirm</Button>
+                  </Grid>  
                 </Grid>
+            </div>
           </div>
       </div>
     </>
