@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const bookingSlice = createSlice({
     name:'Booking',
-    initialState:{
-        booking: null,
+    initialState:{ 
+        booking: localStorage.getItem('bookingList') ? JSON.parse(localStorage.getItem('bookingList')) : null,
     },
     reducers:{
         bookingList: (state,action)=>{
