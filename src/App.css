@@ -7,9 +7,14 @@
     background-size: cover;
     background-position: left; 
 }
+.form-margin{
+    margin: 150px auto 30px; 
+}
+.list-margin{
+    margin: 0 auto; 
+}
 .card {
 /* position: relative; */
-margin: 150px auto;
 width: 70%;
 padding: 20px;
 box-shadow: 3px 10px 20px rgba(0, 0, 0, 0.2);
@@ -19,4 +24,13 @@ border: 0;
 }       
 .form-width{
     width: 100% !important;
+}
+.list-title{
+    font-family: var(--primary-font);
+    font-size: 14px;
+    font-weight: 600; 
+    color: rgba(0, 0, 0, 0.6);
+}
+.list-item{
+    padding: 10px 0;
 }
