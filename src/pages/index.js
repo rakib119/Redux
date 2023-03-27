@@ -15,10 +15,12 @@ import { DateField } from '@mui/x-date-pickers/DateField'; */
 
 
 const BookingPannel = () => { 
-  let airport = ['Dhaka',"Cox's Bazar","Jessore","Chittagong","Saidpur","Sylhet Osmani"];
-  let member = [1,2,3,4,5,6];
-  let classList = ['Busieness Class','Economy Class'];
+  let airport = ["Please Select","Dhaka","Cox's Bazar","Jessore","Chittagong","Saidpur","Sylhet Osmani"];
+  let member = ["Please Select",1,2,3,4,5,6];
+  let classList = ["Please Select",'Busieness Class','Economy Class'];
+
   const booking_list = useSelector(state=>state.bookingList.booking);
+
   const today = ()=>{
     const today = new Date();
     const day = today.getDate().toString().padStart(2, '0');
@@ -28,7 +30,9 @@ const BookingPannel = () => {
     return currentDate;
   }
   const dispatch = useDispatch() ;
+
   const date = today();
+
   const [info, setInfo] = useState({
     form_location: 1,
     to_location: 0,
@@ -36,12 +40,13 @@ const BookingPannel = () => {
     date: date,
     class_name: 0,
   }); 
-  const [bookingItems,setBookingItems] = useState([]);
 
-  const handleChange = (e) => {
+  const [bookingItems,setBookingItems] = useState(
+    localStorage.getItem('bookingList') ? JSON.parse(localStorage.getItem('bookingList')) : []
+  );
 
-    const {name,value} = e.target;
-    // console.log(name); 
+  const handleChange = (e) => { 
+    const {name,value} = e.target; 
     setInfo((perv)=>({
        ...perv,
        [name]:value
@@ -61,46 +66,35 @@ const BookingPannel = () => {
     dateError:null,
     class_nameError:null,
   });  
-// useEffect(() => {
-//   if (bookingItems.length) {
-//     dispatch(bookingList(bookingItems)); 
-//     localStorage.setItem('bookingList', JSON.stringify(bookingItems));
-//     // alert('Send data into storage'); 
-//   }
-  
-// }, [bookingItems]);
-const handleSubmit = ()=>{
-  if(info.form_location && info.to_location && info.guest && info.date && info.class_name){ 
-    // console.log(bookingItems);
-    // if (bookingItems.length === 0) {
-    //   setBookingItems(perv=>perv.concat(info));
-    // }
-    setBookingItems(perv=>perv.concat(info));
-    dispatch(bookingList(bookingItems)); 
-    localStorage.setItem('bookingList', JSON.stringify(bookingItems));
-      
-   
-  }else{
-    if (!info.form_location) {
-      setErrorMsg('form_locationError','Form field is required'); 
-    }
-    if (!info.to_location) {
-      setErrorMsg('to_locationError','To field is required'); 
-    }
-    if (!info.guest) {
-      setErrorMsg('guestError','Guest field is required'); 
-    }
-    if (!info.date) {
-      setErrorMsg('dateError','Date field is required'); 
-    }
-    if (!info.class_name) {
-      setErrorMsg('class_nameError','Class Name field is required'); 
-    }
-  } 
-}
-const handleDelete = ()=>{
-
-}
+  useEffect(() => { 
+      dispatch(bookingList(bookingItems)); 
+      localStorage.setItem('bookingList', JSON.stringify(bookingItems)); 
+    
+  }, [bookingItems,dispatch]);
+  const handleSubmit = ()=>{
+    if(info.form_location && info.to_location && info.guest && info.date && info.class_name){  
+      setBookingItems(prevArray=>prevArray.concat(info)); 
+    }else{
+      if (!info.form_location) {
+        setErrorMsg('form_locationError','Form field is required'); 
+      }
+      if (!info.to_location) {
+        setErrorMsg('to_locationError','To field is required'); 
+      }
+      if (!info.guest) {
+        setErrorMsg('guestError','Guest field is required'); 
+      }
+      if (!info.date) {
+        setErrorMsg('dateError','Date field is required'); 
+      }
+      if (!info.class_name) {
+        setErrorMsg('class_nameError','Class Name field is required'); 
+      }
+    } 
+  }
+  const handleDelete = key=>event=>{ 
+      setBookingItems(prevArray =>prevArray.length > 0 ? prevArray.filter((item, index) => index !== key) : []); 
+  }
   return (
     <>
       <div className='booking-pannel'>
@@ -112,7 +106,7 @@ const handleDelete = ()=>{
                     <Select className='form-width' name='form_location' labelId="form-label" id="form-input" value={info.form_location} label="Form" onChange={handleChange}  >
                       {
                         airport.map((value,key)=>
-                          <MenuItem key={key} value={key+1}>{value}</MenuItem> 
+                          <MenuItem key={key} value={key}>{value}</MenuItem> 
                         )
                       }
                     </Select>
@@ -126,10 +120,9 @@ const handleDelete = ()=>{
                 <FormControl fullWidth>
                       <InputLabel id="to-label">To</InputLabel> 
                       <Select className='to-width' name='to_location'  labelId="to-label" id="to-input" value={info.to_location} label="to" onChange={handleChange}>
-                        <MenuItem value={0}> Please Select </MenuItem>
                         {
                         airport.map((value,key)=>
-                          <MenuItem key={key} value={key+1}>{value}</MenuItem> 
+                          <MenuItem key={key} value={key}>{value}</MenuItem> 
                         )
                         }
                       </Select>
@@ -155,10 +148,9 @@ const handleDelete = ()=>{
                 <FormControl fullWidth>
                   <InputLabel id="guest-label">Guest</InputLabel> 
                   <Select className='guest-width' name='guest' labelId="guest-label" id="guest-input" value={info.guest} label="guest" onChange={handleChange} >
-                    <MenuItem value={0}> Please Select </MenuItem>
                     {
                       member.map((value,key)=>(
-                        <MenuItem  key={key} value={key+1}>{value}</MenuItem>
+                        <MenuItem  key={key} value={key}>{value}</MenuItem>
                       ))
                     } 
                   </Select>
@@ -172,10 +164,9 @@ const handleDelete = ()=>{
                 <FormControl fullWidth>
                   <InputLabel id="class-label">Class Name</InputLabel> 
                   <Select className='class-width' name='class_name'  labelId="class-label" id="class-input" value={info.class_name} label="class" onChange={handleChange} >
-                    <MenuItem value={0}> Please Select </MenuItem>
                     {
                       classList.map((value,key)=>(
-                        <MenuItem key={key} value={key+1}>{value}</MenuItem> 
+                        <MenuItem key={key} value={key}>{value}</MenuItem> 
                       ))
                     }
                   </Select>
@@ -192,6 +183,9 @@ const handleDelete = ()=>{
           </div>
           <div className='card list-margin'> 
             <Grid container spacing={2} > 
+              <Grid item xs={1}>
+                <p className='list-title'>#SL</p>
+              </Grid>
               <Grid item xs={2}>
                 <p className='list-title'>Form</p>
               </Grid>   
@@ -201,7 +195,7 @@ const handleDelete = ()=>{
               <Grid item xs={2}>
                 <p className='list-title'>Date</p>
               </Grid> 
-              <Grid item xs={2}>
+              <Grid item xs={1}>
                 <p className='list-title'>Guest</p>
               </Grid>  
               <Grid item xs={2}>
@@ -215,6 +209,9 @@ const handleDelete = ()=>{
               { booking_list &&
                booking_list.map((value,key)=>( 
                 <Grid container spacing={2} key={key} id={key}> 
+                  <Grid item xs={1}>
+                    <p className='list-item'>{key+1}</p>
+                  </Grid>  
                   <Grid item xs={2}>
                     <p className='list-item'>{airport[value.form_location]}</p>
                   </Grid>   
@@ -224,14 +221,14 @@ const handleDelete = ()=>{
                   <Grid item xs={2}>
                     <p className='list-item'>{value.date}</p>
                   </Grid> 
-                  <Grid item xs={2}>
+                  <Grid item xs={1}>
                     <p className='list-item'>{member[value.guest]}</p>
                   </Grid>  
                   <Grid item xs={2}>
                     <p className='list-item'>{classList[value.class_name]}</p>
                   </Grid>  
                   <Grid item xs={2} className='list-item'> 
-                    <Button onClick={handleDelete} variant="outlined">Delete</Button>
+                    <Button onClick={handleDelete(key)} variant="outlined">Delete</Button>
                   </Grid>  
                 </Grid>
                ))
