@@ -106,7 +106,8 @@ const BookingPannel = () => {
                     <Select className='form-width' name='form_location' labelId="form-label" id="form-input" value={info.form_location} label="Form" onChange={handleChange}  >
                       {
                         airport.map((value,key)=>
-                          <MenuItem key={key} value={key}>{value}</MenuItem> 
+                          ( key !== info.to_location || info.to_location === 0) && 
+                          (<MenuItem key={key} value={key}>{value}</MenuItem> )
                         )
                       }
                     </Select>
@@ -122,7 +123,8 @@ const BookingPannel = () => {
                       <Select className='to-width' name='to_location'  labelId="to-label" id="to-input" value={info.to_location} label="to" onChange={handleChange}>
                         {
                         airport.map((value,key)=>
-                          <MenuItem key={key} value={key}>{value}</MenuItem> 
+                          ( key !== info.form_location || info.form_location === 0) && 
+                          (<MenuItem key={key} value={key}>{value}</MenuItem> )
                         )
                         }
                       </Select>
